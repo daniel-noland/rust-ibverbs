@@ -16,12 +16,13 @@ docker buildx build \
 docker run \
   --cap-add NET_ADMIN \
   --interactive \
-  --mount "type=bind,source=${HOME}/.cargo,target=/home/builder/.cargo" \
-  --mount "type=bind,source=${build_dir},target=${build_dir}" \
+  --mount "type=bind,source=${build_dir},target=/rust-ibverbs" \
+  --mount "type=volume,src=rust-ibverbs-rdma-core-build,destination=/rust-ibverbs/vendor/rdma-core/build" \
+  --mount "type=volume,src=rust-ibverbs-cargo-cache,destination=/home/builder/.cargo" \
   --name="rust-ibverbs" \
   --rm \
   --tty \
   --user "$(id --user):$(id --group)" \
-  --workdir "${build_dir}" \
+  --workdir "/rust-ibverbs" \
   rust-ibverbs \
   bash
