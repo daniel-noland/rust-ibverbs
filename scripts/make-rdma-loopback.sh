@@ -6,7 +6,7 @@ set -euxETo pipefail
 # Configuration
 declare -r RXE_INTERFACE_NAME="${1}"
 
-# Print an error message
+# Print a log message
 log() {
   >&2 printf "%s\n" "${*}"
 }
@@ -34,7 +34,6 @@ confirm_rdma_netns_shared() {
 # that macvlan.  We then add a rxe device to the macvlan so that RDMA traffic can be exchanged as well.
 set_up_soft_roce_loopback_device() {
   declare -r DEVICE="${1}"
-  modprobe rdma_rxe
   ip link add root type dummy
   ip link add link root name "${DEVICE}" type macvlan mode bridge
   rdma link add "${DEVICE}" type rxe netdev "${DEVICE}"

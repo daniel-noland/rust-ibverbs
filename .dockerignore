@@ -1,3 +1,4 @@
 target/
+vendor/rdma-core/build
 **/*.rs.bk
 Cargo.lock
