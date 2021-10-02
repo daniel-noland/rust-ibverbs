@@ -45,14 +45,14 @@ fn can_send_rdma_loopback_traffic_on_test_device() {
         .alloc_pd()
         .expect("Could not allocate protection domain");
 
-    let prepared_queue_pair = protection_domain
-        .create_qp(
-            &completion_queue,
-            &completion_queue,
-            ibverbs::ibv_qp_type::IBV_QPT_RC,
-        )
-        .build()
-        .expect("Could not create prepared queue pair");
+            let prepared_queue_pair: PreparedQueuePair = protection_domain
+                .create_qp(
+                    &completion_queue,
+                    &completion_queue,
+                    ibverbs::ibv_qp_type::IBV_QPT_RC,
+                )
+                .build()
+                .expect("Could not create prepared queue pair");
 
     let endpoint = prepared_queue_pair.endpoint();
     let mut queue_pair = prepared_queue_pair
