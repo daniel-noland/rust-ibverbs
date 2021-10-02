@@ -1,7 +1,7 @@
 version: ~> 1.0
 language: rust
+os: linux
 dist: focal
-sudo: true
 group: edge
 script:
   - sudo apt-get install --yes linux-modules-extra-"$(uname --kernel-release)"
@@ -30,6 +30,6 @@ rust:
   - beta
   - stable
 cache: cargo
-matrix:
+jobs:
   allow_failures:
     - rust: nightly
