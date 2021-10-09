@@ -33,7 +33,8 @@ set_up_soft_roce_loopback_device() {
   log "Added SoftRoCE link ${DEVICE}"
   ip link set dev root up
   ip link set dev "${DEVICE}" up
-  ip address add dev "${DEVICE}" 169.254.253.253/31
+  declare -r EXAMPLE_IP_ADDRESS="192.0.2.1/24"
+  ip address add dev "${DEVICE}" "${EXAMPLE_IP_ADDRESS}"
 }
 
 # Get state of RDMA device supplied in first argument.
