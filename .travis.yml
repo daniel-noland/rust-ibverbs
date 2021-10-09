@@ -37,7 +37,6 @@ addons:
     - libnl-route-3-dev
     - libudev-dev
     - ninja-build
-    - rdma-core
 env:
   - RUST_BACKTRACE=1
 rust:
