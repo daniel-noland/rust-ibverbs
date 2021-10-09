@@ -91,6 +91,8 @@ pub use ffi::ibv_access_flags;
 /// https://github.com/rust-lang/rust/issues/35729 and implement it ourselves.
 mod sliceindex;
 
+const DEFAULT_GID_IDX: i32 = 1;
+
 /// Get list of available RDMA devices.
 ///
 /// # Errors
@@ -378,7 +380,7 @@ impl Context {
 
         // let mut gid = ffi::ibv_gid::default();
         let mut gid = Gid::default();
-        let ok = unsafe { ffi::ibv_query_gid(ctx, PORT_NUM, 1 /* TODO: this is not correct */, gid.as_mut()) };
+        let ok = unsafe { ffi::ibv_query_gid(ctx, PORT_NUM, DEFAULT_GID_IDX /* TODO: this is not correct */, gid.as_mut()) };
         if ok != 0 {
             return Err(io::Error::last_os_error());
         }
@@ -971,7 +973,7 @@ impl<'res> PreparedQueuePair<'res> {
         QueuePairEndpoint {
             num,
             lid: self.ctx.port_attr.lid,
-            gid: self.ctx.gid_from_index(1 /* todo: this is not correct */).unwrap(),
+            gid: self.ctx.gid_from_index(DEFAULT_GID_IDX /* todo: this is not correct */).unwrap(),
         }
     }
 
@@ -1035,7 +1037,7 @@ impl<'res> PreparedQueuePair<'res> {
         attr.ah_attr.sl = 0;
         attr.ah_attr.src_path_bits = 0;
         attr.ah_attr.port_num = PORT_NUM;
-        attr.ah_attr.grh.sgid_index = 1;
+        attr.ah_attr.grh.sgid_index = DEFAULT_GID_IDX as u8;
         attr.ah_attr.grh.dgid = remote.gid.into();
         attr.ah_attr.grh.hop_limit = 0xff;
         let mask = ffi::ibv_qp_attr_mask::IBV_QP_STATE

@@ -8,6 +8,6 @@ declare -r build_dir
 
 pushd "${build_dir}"
 docker buildx build --tag=rust_ibverbs_image_debian "${build_dir}"
-docker buildx build -f Dockerfile.alpine --tag=rust_ibverbs_image_alpine "${build_dir}"
+docker buildx build --no-cache -f Dockerfile.alpine --tag=rust_ibverbs_image_alpine "${build_dir}"
 popd
 
