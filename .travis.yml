@@ -19,7 +19,7 @@ script:
   - sudo apt-cache search gcc-10
   - sudo apt-cache search gcc-11
   - sudo apt-cache search rdma
-  - sudo apt-get install --yes linux-modules-extra-"$(uname --kernel-release)" ibverbs-providers
+  - sudo apt-get install --yes linux-modules-extra-"$(uname --kernel-release)" ibverbs-providers rdma-core
   - ./scripts/ci.sh
   - cargo build --verbose
   - cargo test --verbose -- --test-threads=1
