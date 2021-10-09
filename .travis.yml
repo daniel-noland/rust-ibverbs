@@ -2,6 +2,7 @@ version: ~> 1.0
 language: rust
 os: linux
 dist: focal
+group: edge
 script:
   - sudo apt-get update
   - sudo apt-cache search ibverbs
@@ -16,6 +17,8 @@ addons:
     packages:
     - cmake
     - cmake-data
+    - gcc
+    - ibverbs-utils
     - iproute2
     - jq
     - libibverbs-dev
