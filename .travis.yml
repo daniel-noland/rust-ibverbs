@@ -13,8 +13,6 @@ addons:
     packages:
     - cmake
     - cmake-data
-    - gcc-10
-    - ibverbs-providers
     - iproute2
     - jq
     - libibverbs-dev
