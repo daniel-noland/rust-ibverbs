@@ -2,8 +2,11 @@ version: ~> 1.0
 language: rust
 os: linux
 dist: focal
-group: edge
 script:
+  - sudo apt-get update
+  - sudo apt-cache search ibverbs
+  - sudo apt-cache search gcc-10
+  - sudo apt-cache search gcc-11
   - sudo apt-get install --yes linux-modules-extra-"$(uname --kernel-release)"
   - ./scripts/ci.sh
   - cargo build --verbose
@@ -13,6 +16,8 @@ addons:
     packages:
     - cmake
     - cmake-data
+    - gcc-10
+    - ibverbs-providers
     - iproute2
     - jq
     - libibverbs-dev
