@@ -15,7 +15,7 @@ fn main() {
             .expect("Failed to update submodules.");
     } else {
         assert!(
-            Path::new("vendor/rdma-core").is_dir(),
+            false,
             "vendor source not included"
         );
     }
