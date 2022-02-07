@@ -1,0 +1,36 @@
+name: Rust
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Prepare CI environment
+      run: sudo ./scripts/prepare-ci.sh
+#    - name: enable deb-src
+#      run: sudo sed -i 's/^# deb-src/deb-src/' /etc/apt/sources.list
+#    - name: update package cache
+#      run: sudo apt-get update
+#    - name: Install dependencies
+#      run: sudo apt-get install --yes --no-install-recommends libnl-3-dev libnl-route-3-dev rdma-core libibverbs-dev linux-modules-extra-"$(uname --kernel-release)" dpkg-dev ncurses-dev bison flex libssl-dev libelf-dev bc
+#    - name: Install kernel build dependencies
+#      run: sudo apt-get build-dep linux-azure
+    - name: Make rdma loopback device
+      run: sudo ./scripts/make-rdma-loopback.sh
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test --verbose
