@@ -56,7 +56,10 @@ build_and_install_soft_roce_kernel_module() {
     make --jobs="$(nproc)" M=drivers/infiniband/core;
     make --jobs="$(nproc)" M=drivers/infiniband/sw/rxe;
     modprobe ib_core
-    insmod ./drivers/infiniband/sw/rxe/rdma_rxe.ko;
+    mkdir --parent "/lib/modules/${kernel_release}/kernel/drivers/infiniband/sw/rxe";
+    cp ./drivers/infiniband/sw/rxe/rdma_rxe.ko "/lib/modules/${kernel_release}/kernel/drivers/infiniband/sw/rxe";
+    depmod --all
+    modprobe rdma_rxe
   )
 }
 
