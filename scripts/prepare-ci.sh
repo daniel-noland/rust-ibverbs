@@ -36,18 +36,18 @@ build_and_install_soft_roce_kernel_module() {
   (
     set -x;
     pushd /run/kernel-source;
-    apt-get source --yes "linux-image-unsigned-$(uname --kernel-release)-azure";
+    apt-get source --yes "linux-image-unsigned-$(uname --kernel-release)";
     pushd "/run/kernel-source/linux-azure-$(uname --kernel-release)";
 #    apt-get source --yes "linux-image-unsigned-5.4.0-1010-azure";
 #    pushd "/run/kernel-source/linux-azure-5.4.0";
     apt-cache search linux-buildinfo | grep azure;
-    apt-get install --yes linux-buildinfo-"$(uname --kernel-release)-azure"
+    apt-get install --yes "linux-buildinfo-$(uname --kernel-release)"
 #    apt-get install --yes "linux-buildinfo-5.4.0-1010-azure";
-    cp "/usr/lib/linux/$(uname --kernel-release)-1010-azure/config" ./.config;
+    cp "/usr/lib/linux/$(uname --kernel-release)/config" ./.config;
 #    cp "/usr/lib/linux/5.4.0-1010-azure/config" ./.config;
     make olddefconfig;
 #    cp "/usr/src/linux-headers-5.11.0-1028-azure/Module.symvers" ./;
-    cp "/usr/src/linux-headers-$(uname --kernel-release)-azure/Module.symvers" ./;
+    cp "/usr/src/linux-headers-$(uname --kernel-release)/Module.symvers" ./;
     sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
     make --jobs="$(nproc)" prepare;
     make --jobs="$(nproc)" modules_prepare;
