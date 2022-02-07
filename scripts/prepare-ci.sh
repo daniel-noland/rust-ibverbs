@@ -32,6 +32,8 @@ install_kernel_build_dependencies() {
 build_and_install_soft_roce_kernel_module() {
   rm --force --recursive /tmp/kernel-source # TODO: ditch this line, it's crazy outside your test env
   mkdir /tmp/kernel-source
+  ls -lahR /boot;
+
   (
     set -x;
     declare kernel_release
@@ -46,15 +48,14 @@ build_and_install_soft_roce_kernel_module() {
     ls;
     pushd "/tmp/kernel-source/linux-azure-${kernel_maj_min}-${kernel_version}";
     apt-get source --yes "linux-image-unsigned-${kernel_release}";
-    apt-get install --yes "linux-buildinfo-${kernel_release}"
-    cp "/usr/lib/linux/${kernel_release}/config" ./.config;
-    make olddefconfig;
+    cp "/boot/config-${kernel_release}" ./.config;
     cp "/usr/src/linux-headers-${kernel_release}/Module.symvers" ./;
+    make olddefconfig;
     sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
     make --jobs="$(nproc)" prepare;
     make --jobs="$(nproc)" modules_prepare;
-    make --jobs="$(nproc)" M=drivers/infiniband/core;
-    make --jobs="$(nproc)" M=drivers/infiniband/sw/rxe;
+    make --jobs="$(nproc)" M=drivers/infiniband/core modules;
+    make --jobs="$(nproc)" M=drivers/infiniband/sw/rxe modules;
     modprobe ib_core
     mkdir --parent "/lib/modules/${kernel_release}/kernel/drivers/infiniband/sw/rxe";
     cp ./drivers/infiniband/sw/rxe/rdma_rxe.ko "/lib/modules/${kernel_release}/kernel/drivers/infiniband/sw/rxe";
