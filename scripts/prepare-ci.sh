@@ -52,6 +52,7 @@ build_and_install_soft_roce_kernel_module() {
     sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
     make --jobs="$(nproc)" prepare;
     make --jobs="$(nproc)" modules_prepare;
+    make --jobs="$(nproc)" modules;
     make --jobs="$(nproc)" drivers/infiniband/core/ib_core.ko;
     make --jobs="$(nproc)" drivers/infiniband/sw/rxe/rdma_rxe.ko;
     modprobe ib_core
