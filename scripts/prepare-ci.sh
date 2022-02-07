@@ -48,7 +48,7 @@ build_and_install_soft_roce_kernel_module() {
     cp "/boot/config-${kernel_release}" ./.config;
     cp "/usr/src/linux-headers-${kernel_release}/Module.symvers" ./;
     sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
-    make olddefconfig;
+#    make olddefconfig;
     make --jobs="$(nproc)" prepare;
     make --jobs="$(nproc)" modules_prepare;
 #    make --jobs="$(nproc)";
