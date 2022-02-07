@@ -48,15 +48,27 @@ build_and_install_soft_roce_kernel_module() {
     cp "/boot/config-${kernel_release}" ./.config;
     cp "/usr/src/linux-headers-${kernel_release}/Module.symvers" ./;
     sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
+    sed --in-place 's/CONFIG_DEBUG_INFO_BTF=.*/# CONFIG_DEBUG_INFO_BTF is not set/' ./.config;
 #    make olddefconfig;
     make --jobs="$(nproc)" prepare;
     make --jobs="$(nproc)" modules_prepare;
     make --jobs="$(nproc)";
     make --jobs="$(nproc)" modules;
     make --jobs="$(nproc)" modules_install;
-    depmod --all;
+#    make -C "/lib/modules/${kernel_release}/build" M="$(pwd)/drivers/infiniband/sw/rxe/rdma_rxe.ko" modules
+    make --jobs="$(nproc)" M="drivers/infiniband"
+    make --jobs="$(nproc)" M="drivers/infiniband" modules
+    # Remember the KBUILD_EXTRA_SYMBOLS := /home/vilhelm/foo/Module.symvers trick from this so
+    # https://stackoverflow.com/questions/16360689/invalid-parameters-error-when-trying-to-insert-module-that-accesses-exported-s
+    make --jobs="$(nproc)" M="drivers/infiniband/sw/rxe/" modules_install || true
     modprobe ib_core
-    modprobe rdma_rxe;
+    insmod ./drivers/infiniband/sw/rxe/rdma_rxe.ko
+
+#    modprobe ib_core
+#    mkdir --parent "/lib/modules/${kernel_release}/kernel/drivers/infiniband/sw/rxe";
+#    cp ./drivers/infiniband/sw/rxe/rdma_rxe.ko "/lib/modules/${kernel_release}/kernel/drivers/infiniband/sw/rxe";
+#    depmod --all;
+#    modprobe rdma_rxe;
   )
 }
 
