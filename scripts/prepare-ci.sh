@@ -60,9 +60,7 @@ build_and_install_soft_roce_kernel_module() {
     depmod --all --errsyms --symvers=./Module.symvers
     depmod --all --errsyms --symvers="/usr/src/linux-headers-${kernel_release}/Module.symvers" || true
     modprobe ib_core
-    modprobe rdma_rxe || true
-    insmod ./drivers/infiniband/sw/rxe/rdma_rxe.ko || true
-    dmesg
+    modprobe --force rdma_rxe || { dmesg; exit 1; }
 
 #    make M="drivers/infiniband/sw/rxe/" modules_install
 
