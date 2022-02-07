@@ -44,25 +44,29 @@ build_and_install_soft_roce_kernel_module() {
     declare -r kernel_maj_min="${kernel_version%.*}"
     pushd /tmp/kernel-source;
     apt-get source --yes "linux-image-unsigned-${kernel_release}" >/dev/null;
-    pushd "/tmp/kernel-source/linux-azure-${kernel_maj_min}-${kernel_version}";
-    cp "/boot/config-${kernel_release}" ./.config;
-    cp "/usr/src/linux-headers-${kernel_release}/Module.symvers" ./;
-    sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
-    sed --in-place 's/CONFIG_DEBUG_INFO_BTF=.*/# CONFIG_DEBUG_INFO_BTF is not set/' ./.config;
+#    pushd "/tmp/kernel-source/linux-azure-${kernel_maj_min}-${kernel_version}";
+#    cp "/boot/config-${kernel_release}" ./.config;
+#    cp "/usr/src/linux-headers-${kernel_release}/Module.symvers" ./;
+#    sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
+#    sed --in-place 's/CONFIG_DEBUG_INFO_BTF=.*/# CONFIG_DEBUG_INFO_BTF is not set/' ./.config;
 #    make olddefconfig;
-    make --jobs="$(nproc)" prepare;
-    make --jobs="$(nproc)" modules_prepare;
-    make --jobs="$(nproc)";
-    make --jobs="$(nproc)" modules;
-    make --jobs="$(nproc)" modules_install;
+#    make --jobs="$(nproc)" prepare;
+#    make --jobs="$(nproc)" modules_prepare;
+    pushd "/lib/modules/${kernel_release}/build"
+    make -C "/lib/modules/${kernel_release}/build" M="drivers/infiniband/sw/rxe/"
+    make -C "/lib/modules/${kernel_release}/build" M="drivers/infiniband/sw/rxe/" modules
+    make -C "/lib/modules/${kernel_release}/build" M="drivers/infiniband/sw/rxe/" modules_install
+
 #    make -C "/lib/modules/${kernel_release}/build" M="$(pwd)/drivers/infiniband/sw/rxe/rdma_rxe.ko" modules
-    make --jobs="$(nproc)" M="drivers/infiniband"
-    make --jobs="$(nproc)" M="drivers/infiniband" modules
+#    make --jobs="$(nproc)" M="drivers/infiniband"
+#    make --jobs="$(nproc)" M="drivers/infiniband" modules
     # Remember the KBUILD_EXTRA_SYMBOLS := /home/vilhelm/foo/Module.symvers trick from this so
     # https://stackoverflow.com/questions/16360689/invalid-parameters-error-when-trying-to-insert-module-that-accesses-exported-s
-    make --jobs="$(nproc)" M="drivers/infiniband/sw/rxe/" modules_install || true
-    modprobe ib_core
-    insmod ./drivers/infiniband/sw/rxe/rdma_rxe.ko
+#    make --jobs="$(nproc)" M="drivers/infiniband/sw/rxe/" modules_install || true
+    depmod --all
+#    modprobe ib_core
+    modprobe rdma_rxe
+#    insmod ./drivers/infiniband/sw/rxe/rdma_rxe.ko
 
 #    modprobe ib_core
 #    mkdir --parent "/lib/modules/${kernel_release}/kernel/drivers/infiniband/sw/rxe";
