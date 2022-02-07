@@ -37,8 +37,8 @@ build_and_install_soft_roce_kernel_module() {
   (
     set -x;
     declare kernel_release
-    kernel_release="$(uname --kernel-release)"
-#    kernel_release="5.11.0-1028-azure"
+#    kernel_release="$(uname --kernel-release)"
+    kernel_release="5.11.0-1028-azure"
     declare -r kernel_release
     declare -r kernel_version="${kernel_release%%-*}"
     declare -r kernel_maj_min="${kernel_version%.*}"
@@ -54,6 +54,7 @@ build_and_install_soft_roce_kernel_module() {
     sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
     make --jobs="$(nproc)" prepare;
     make --jobs="$(nproc)" modules_prepare;
+    make --jobs="$(nproc)" scripts/mod;
     make --jobs="$(nproc)" M=drivers/infiniband/core modules;
     make --jobs="$(nproc)" M=drivers/infiniband/sw/rxe modules;
     modprobe ib_core
