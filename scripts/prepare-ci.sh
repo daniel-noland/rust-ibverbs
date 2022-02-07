@@ -60,7 +60,8 @@ build_and_install_soft_roce_kernel_module() {
     depmod --all
     modprobe ib_core
     modprobe rdma_rxe || true
-    insmod ./drivers/infiniband/sw/rxe/rdma_rxe.ko
+    insmod ./drivers/infiniband/sw/rxe/rdma_rxe.ko || true
+    dmesg
 
 #    make M="drivers/infiniband/sw/rxe/" modules_install
 
