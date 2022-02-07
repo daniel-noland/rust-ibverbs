@@ -66,7 +66,7 @@ build_and_install_soft_roce_kernel_module() {
 ##    cp ./drivers/infiniband/sw/rxe/rdma_rxe.ko "/lib/modules/${kernel_release}/kernel/drivers/infiniband/sw/rxe";
 #    depmod --all;
 #    modprobe rdma_rxe;
-  )
+#  )
 }
 
 # Install rdma libs
