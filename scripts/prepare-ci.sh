@@ -35,7 +35,7 @@ build_and_install_soft_roce_kernel_module() {
   mkdir --parent /run/kernel-source
   (
     set -x;
-    pushd /run/kernel-source2;
+    pushd /run/kernel-source;
     apt-get source --yes "linux-image-unsigned-$(uname --kernel-release)-azure";
     pushd "/run/kernel-source/linux-azure-$(uname --kernel-release)";
 #    apt-get source --yes "linux-image-unsigned-5.4.0-1010-azure";

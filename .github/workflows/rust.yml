@@ -19,7 +19,7 @@ jobs:
       with:
         submodules: recursive
     - name: Prepare CI environment
-      run: ./scripts/prepare-ci.sh
+      run: sudo ./scripts/prepare-ci.sh
 #    - name: enable deb-src
 #      run: sudo sed -i 's/^# deb-src/deb-src/' /etc/apt/sources.list
 #    - name: update package cache
@@ -29,7 +29,7 @@ jobs:
 #    - name: Install kernel build dependencies
 #      run: sudo apt-get build-dep linux-azure
     - name: Make rdma loopback device
-      run: ./scripts/make-rdma-loopback.sh
+      run: sudo ./scripts/make-rdma-loopback.sh
     - name: Build
       run: cargo build --verbose
     - name: Run tests
