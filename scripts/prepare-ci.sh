@@ -30,9 +30,8 @@ install_kernel_build_dependencies() {
 }
 
 build_and_install_soft_roce_kernel_module() {
-  uname -a;
-  uname --kernel-release;
-  mkdir --parent /tmp/kernel-source
+  rm --force --recursive /tmp/kernel-source # TODO: ditch this line, it's crazy outside your test env
+  mkdir /tmp/kernel-source
   (
     set -x;
     declare kernel_release
@@ -54,8 +53,8 @@ build_and_install_soft_roce_kernel_module() {
     sed --in-place 's/# CONFIG_RDMA_RXE is not set/CONFIG_RDMA_RXE=m/' ./.config;
     make --jobs="$(nproc)" prepare;
     make --jobs="$(nproc)" modules_prepare;
-    make --jobs="$(nproc)" M=drivers/infiniband/core/ib_core;
-    make --jobs="$(nproc)" M=drivers/infiniband/sw/rxe/rdma_rxe;
+    make --jobs="$(nproc)" M=drivers/infiniband/core;
+    make --jobs="$(nproc)" M=drivers/infiniband/sw/rxe;
     modprobe ib_core
     insmod ./drivers/infiniband/sw/rxe/rdma_rxe.ko;
   )
