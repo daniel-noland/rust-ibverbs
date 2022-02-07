@@ -32,14 +32,14 @@ install_kernel_build_dependencies() {
 build_and_install_soft_roce_kernel_module() {
   uname -a;
   uname --kernel-release;
-  mkdir --parent /run/kernel-source
+  mkdir --parent /tmp/kernel-source
   (
     set -x;
-    pushd /run/kernel-source;
+    pushd /tmp/kernel-source;
     apt-get source --yes "linux-image-unsigned-$(uname --kernel-release)";
-    pushd "/run/kernel-source/linux-azure-$(uname --kernel-release)";
+    pushd "/tmp/kernel-source/linux-azure-$(uname --kernel-release)";
 #    apt-get source --yes "linux-image-unsigned-5.4.0-1010-azure";
-#    pushd "/run/kernel-source/linux-azure-5.4.0";
+#    pushd "/tmp/kernel-source/linux-azure-5.4.0";
     apt-cache search linux-buildinfo | grep azure;
     apt-get install --yes "linux-buildinfo-$(uname --kernel-release)"
 #    apt-get install --yes "linux-buildinfo-5.4.0-1010-azure";
