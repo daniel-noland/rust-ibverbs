@@ -20,6 +20,8 @@ jobs:
         submodules: recursive
     - name: Install dependencies
       run: sudo apt-get install --yes --no-install-recommends libnl-3-dev libnl-route-3-dev rdma-core libibverbs-dev
+    - name: Make rdma loopback device
+      run: ./scripts/make-rdma-loopback.sh
     - name: Build
       run: cargo build --verbose
     - name: Run tests
